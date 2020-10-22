@@ -56,7 +56,7 @@ configure_msvc_runtime ()
 # add_subfolder doesnt work on linux if you need to istall packages, add it in top level file
 SET (DSPFILTERS "DSPFilters")
 aux_source_directory (${CMAKE_HOME_DIRECTORY}/third_party/DSPFilters/source DSPFILTERS_SOURCE_LIB)
-add_library (${DSPFILTERS} STATIC ${DSPFILTERS_SOURCE_LIB})
+add_library (${DSPFILTERS} STATIC ${DSPFILTERS_SOURCE_LIB} "src/board_controller/mindrove/inc/mindrove.h" "src/board_controller/mindrove/mindrove.cpp")
 target_include_directories (${DSPFILTERS} PUBLIC $<BUILD_INTERFACE:${CMAKE_HOME_DIRECTORY}/third_party/DSPFilters/include>)
 set_property (TARGET ${DSPFILTERS} PROPERTY POSITION_INDEPENDENT_CODE ON)
 # there are asserts, I wanna disable them even for debug builds
@@ -64,7 +64,7 @@ target_compile_definitions(${DSPFILTERS} PRIVATE -DNDEBUG)
 
 SET (WAVELIB "WaveLib")
 aux_source_directory (${CMAKE_HOME_DIRECTORY}/third_party/wavelib/src WAVELIB_SRC)
-add_library (${WAVELIB} STATIC ${WAVELIB_SRC})
+add_library (${WAVELIB} STATIC ${WAVELIB_SRC} "src/board_controller/mindrove/inc/mindrove.h" "src/board_controller/mindrove/mindrove.cpp")
 target_include_directories (${WAVELIB} PUBLIC $<BUILD_INTERFACE:${CMAKE_HOME_DIRECTORY}/third_party/wavelib/header>)
 set_property (TARGET ${WAVELIB} PROPERTY POSITION_INDEPENDENT_CODE ON)
 
@@ -143,7 +143,7 @@ set (GANGLION_SOURCE_LIB
     ${CMAKE_HOME_DIRECTORY}/src/board_controller/openbci/ganglion_bglib/uart.cpp
     ${CMAKE_HOME_DIRECTORY}/src/utils/timestamp.cpp
 )
-add_library (${GANGLION_LIB} SHARED ${GANGLION_SOURCE_LIB})
+add_library (${GANGLION_LIB} SHARED ${GANGLION_SOURCE_LIB} "src/board_controller/mindrove/inc/mindrove.h" "src/board_controller/mindrove/mindrove.cpp")
 target_include_directories (${GANGLION_LIB} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_HOME_DIRECTORY}/src/utils/inc>
     $<BUILD_INTERFACE:${CMAKE_HOME_DIRECTORY}/src/board_controller/openbci/ganglion_bglib/inc>
@@ -188,6 +188,7 @@ set (BOARD_CONTROLLER_SRC
     ${CMAKE_HOME_DIRECTORY}/src/board_controller/mit/fascia.cpp
     ${CMAKE_HOME_DIRECTORY}/src/board_controller/neurosity/notion_osc.cpp
     ${CMAKE_HOME_DIRECTORY}/src/board_controller/ironbci/ironbci.cpp
+    ${CMAKE_HOME_DIRECTORY}/src/board_controller/mindrove/mindrove.cpp
 )
 
 set (DATA_HANDLER_SRC
@@ -205,17 +206,17 @@ set (ML_MODULE_SRC
 add_library (
     ${BOARD_CONTROLLER_NAME} SHARED
     ${BOARD_CONTROLLER_SRC}
-)
+ "src/board_controller/mindrove/inc/mindrove.h" "src/board_controller/mindrove/mindrove.cpp")
 
 add_library (
     ${DATA_HANDLER_NAME} SHARED
     ${DATA_HANDLER_SRC}
-)
+ "src/board_controller/mindrove/inc/mindrove.h" "src/board_controller/mindrove/mindrove.cpp")
 
 add_library (
     ${ML_MODULE_NAME} SHARED
     ${ML_MODULE_SRC}
-)
+ "src/board_controller/mindrove/inc/mindrove.h" "src/board_controller/mindrove/mindrove.cpp")
 
 target_include_directories (
     ${BOARD_CONTROLLER_NAME} PRIVATE
@@ -234,6 +235,7 @@ target_include_directories (
     ${CMAKE_HOME_DIRECTORY}/third_party/neurosdk/inc/types
     ${CMAKE_HOME_DIRECTORY}/src/board_controller/neurosity/inc
     ${CMAKE_HOME_DIRECTORY}/src/board_controller/ironbci/inc
+    ${CMAKE_HOME_DIRECTORY}/src/board_controller/mindrove/inc
 )
 
 # disable min max defines in windows.h
